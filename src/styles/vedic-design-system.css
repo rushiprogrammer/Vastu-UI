@@ -1,0 +1,589 @@
+/* =========================================================
+   VEDIC DESIGN SYSTEM - COMPLETE STYLE LIBRARY
+   ========================================================= */
+
+/* 1. DESIGN TOKENS */
+:root {
+  /* Spacing (Angula - 8px base unit) */
+  --angula: 8px;
+  --space-xs: calc(var(--angula) * 1);
+  --space-sm: calc(var(--angula) * 2);
+  --space-md: calc(var(--angula) * 4);
+  --space-lg: calc(var(--angula) * 6);
+
+  /* Colors */
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --accent: #f97316; /* Saffron Fire */
+  --border: #e2e8f0;
+
+  /* Borders & Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  /* Animations */
+  --ease-prana: cubic-bezier(0.34, 1.56, 0.64, 1); /* Living Bounce */
+  --ease-smooth: cubic-bezier(0.33, 0, 0.67, 1);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-deep: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg: #020617;
+  --surface: #0f172a;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --border: #1e293b;
+  --accent: #fb923c;
+}
+
+/* 2. RESET & BASE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* 3. MANDALA GRID SYSTEM (12-Column) */
+.mandala {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-md);
+  max-width: 1400px;
+  margin: auto;
+  padding: var(--space-md);
+}
+
+.zone-header {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.zone-center {
+  grid-column: 3 / 11;
+  padding: var(--space-lg) 0;
+}
+
+.zone-agni {
+  grid-column: 10 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: var(--space-md);
+}
+
+.zone-nairutya {
+  grid-column: 1 / 5;
+  align-self: flex-end;
+  opacity: 0.6;
+}
+
+/* Mobile: 4-Column Grid */
+@media (max-width: 768px) {
+  .mandala {
+    grid-template-columns: repeat(4, 1fr);
+    padding: var(--space-md);
+  }
+
+  .mandala > * {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 4. COMPONENTS */
+
+/* Buttons */
+.btn {
+  border: none;
+  padding: 12px 32px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-prana), opacity 0.2s;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-secondary:hover {
+  background: rgba(249, 115, 22, 0.05);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Text Inputs */
+.vedic-input,
+.vedic-area {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  padding: 0 1rem;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all 0.3s var(--ease-prana);
+}
+
+.vedic-input {
+  height: 48px;
+}
+
+.vedic-area {
+  min-height: 120px;
+  padding: 1rem;
+  resize: vertical;
+}
+
+.vedic-input:focus,
+.vedic-area:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+}
+
+/* Toggle/Switch (Mudra) */
+.mudra-toggle {
+  width: 44px;
+  height: 24px;
+  background: var(--border);
+  border: none;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s var(--ease-prana);
+}
+
+.mudra-toggle::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s var(--ease-prana);
+}
+
+.mudra-toggle.active {
+  background: var(--accent);
+}
+
+.mudra-toggle.active::after {
+  left: 22px;
+}
+
+/* Drop Zone (Kunda) */
+.kunda-container {
+  padding: 3rem 2rem;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-prana);
+  background: transparent;
+}
+
+.kunda-container:hover {
+  border-color: var(--accent);
+  transform: scale(1.01);
+}
+
+.kunda-container.drag-over {
+  border-color: var(--accent);
+  background: rgba(249, 115, 22, 0.05);
+}
+
+/* File Stack (Stambha) */
+.stambha-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  background: var(--surface);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.file-item {
+  padding: var(--space-md);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: entrance 0.3s var(--ease-prana);
+}
+
+/* Animations */
+@keyframes entrance {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Checkbox & Radio (Vedic Mudras) */
+.vedic-checkbox,
+.vedic-radio {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vedic-checkbox:checked,
+.vedic-radio:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.vedic-checkbox {
+  border-radius: 4px;
+}
+
+.vedic-radio {
+  border-radius: 50%;
+}
+
+/* Slider (Vayu Flow) */
+.vedic-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  outline: none;
+  appearance: none;
+}
+
+/* Progress Bar & Ring */
+.vedic-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+}
+
+.vedic-bar::-webkit-progress-value {
+  background: var(--accent);
+  transition: width 0.5s;
+  border-radius: 4px;
+}
+
+.progress-ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative;
+  --p: 0;
+}
+
+.progress-ring::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 8px solid var(--border);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  transform: rotate(calc(var(--p) * 3.6deg));
+  transition: transform 0.5s;
+}
+
+/* Card Component */
+.card {
+  padding: var(--space-lg);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Split View */
+.split-view {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.split-view.collapsed {
+  grid-template-columns: 72px 1fr;
+}
+
+.side-drawer {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.drawer-item {
+  padding: var(--space-md);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.drawer-item:hover {
+  background: var(--bg);
+}
+
+.drawer-item.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.main-panel {
+  padding: var(--space-lg);
+  background: var(--bg);
+  overflow: auto;
+}
+
+/* Mobile Tab Bar */
+.mobile-tabs {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 64px;
+  z-index: 100;
+}
+
+.mobile-tabs a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  color: var(--muted);
+  text-decoration: none;
+  flex: 1;
+  height: 100%;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.mobile-tabs a.active {
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .mobile-tabs {
+    display: flex;
+  }
+
+  body {
+    padding-bottom: 64px;
+  }
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.gap-md {
+  gap: var(--space-md);
+}
+
+.rounded {
+  border-radius: var(--radius-md);
+}
+
+.shadow {
+  box-shadow: var(--shadow-md);
+}
+
+/* Input Groups */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.input-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* Command Bar */
+.command-bar {
+  display: flex;
+  gap: var(--space-sm);
+  background: var(--surface);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.command-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.command-item:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.command-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .no-print {
+    display: none;
+  }
+}
+/* Slider Range Styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+input[type="range"]::-moz-range-track {
+  background: transparent;
+  border: none;
+}
