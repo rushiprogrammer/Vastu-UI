@@ -55,14 +55,18 @@ export const ComboBox: React.FC<ComboBoxProps> = ({
         placeholder={placeholder}
         style={{
           width: '100%',
-          height: '48px',
+          height: '44px',
+          lineHeight: '44px',
           borderRadius: 'var(--radius-sm)',
           border: '1.5px solid var(--border)',
           padding: '0 1rem',
           background: 'var(--surface)',
           color: 'var(--text)',
-          fontSize: '0.95rem',
+          fontSize: '1rem',
+          transition: 'all 0.2s var(--ease-smooth)',
           boxSizing: 'border-box',
+          outline: 'none',
+          letterSpacing: '-0.2px',
         }}
       />
       {isOpen && filtered.length > 0 && (

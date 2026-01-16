@@ -1,8 +1,11 @@
 // Buttons & Input Components
 export { Button } from './components/Button';
+export { IconButton } from './components/IconButton';
+export { SplitButton } from './components/SplitButton';
 export { HyperlinkButton } from './components/HyperlinkButton';
 export { RepeatButton } from './components/RepeatButton';
 export { ToggleButton } from './components/ToggleButton';
+export { ToggleButtonFlyout } from './components/ToggleButtonFlyout';
 export { ToggleSwitch } from './components/ToggleSwitch';
 export { TextInput } from './components/TextInput';
 export { PasswordBox } from './components/PasswordBox';
@@ -36,6 +39,7 @@ export { SplitView } from './components/SplitView';
 export { MandalaMandala, MandalaCell } from './components/MandalaMandala';
 export { AppBar } from './components/AppBar';
 export { CommandBar } from './components/CommandBar';
+export { Footer } from './components/Footer';
 
 // Progress & Information Components
 export { ProgressBar } from './components/ProgressBar';
@@ -53,6 +57,9 @@ export { InfoBar } from './components/InfoBar';
 // Theme Toggle Component
 export { ThemeToggle } from './components/ThemeToggle';
 export { FileUpload } from './components/FileUpload';
+
+// Examples & Composite Components
+export { FileConverter } from './components/FileConverter';
 
 // Styles
 import './styles/vedic-design-system.css';

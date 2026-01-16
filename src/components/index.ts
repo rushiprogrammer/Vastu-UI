@@ -1,8 +1,11 @@
 // Buttons & Input
 export { Button } from './Button';
+export { IconButton } from './IconButton';
+export { SplitButton } from './SplitButton';
 export { HyperlinkButton } from './HyperlinkButton';
 export { RepeatButton } from './RepeatButton';
 export { ToggleButton } from './ToggleButton';
+export { ToggleButtonFlyout } from './ToggleButtonFlyout';
 export { ToggleSwitch } from './ToggleSwitch';
 export { TextInput } from './TextInput';
 export { PasswordBox } from './PasswordBox';
@@ -37,6 +40,7 @@ export { SplitView } from './SplitView';
 export { MandalaMandala, MandalaCell } from './MandalaMandala';
 export { AppBar } from './AppBar';
 export { CommandBar } from './CommandBar';
+export { Footer } from './Footer';
 
 // Progress & Information
 export { ProgressBar } from './ProgressBar';
@@ -54,3 +58,6 @@ export { InfoBar } from './InfoBar';
 // Theme
 export { ThemeToggle } from './ThemeToggle';
 export { FileUpload } from './FileUpload';
+
+// Examples & Composite Components
+export { FileConverter } from './FileConverter';

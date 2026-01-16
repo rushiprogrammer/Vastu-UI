@@ -2,9 +2,12 @@ import { useState } from 'react';
 import {
   // Buttons & Input
   Button,
+  IconButton,
+  SplitButton,
   HyperlinkButton,
   RepeatButton,
   ToggleButton,
+  ToggleButtonFlyout,
   ToggleSwitch,
   TextInput,
   PasswordBox,
@@ -39,6 +42,7 @@ import {
   MandalaCell,
   AppBar,
   CommandBar,
+  Footer,
   
   // Progress & Information
   ProgressBar,
@@ -57,6 +61,9 @@ import {
   ThemeToggle,
   FileUpload,
   FAB,
+  
+  // Examples
+  FileConverter,
 } from './components/index';
 import './App.css';
 
@@ -76,6 +83,7 @@ function App() {
     { icon: 'list', label: 'Lists' },
     { icon: 'dashboard_customize', label: 'Layout' },
     { icon: 'show_chart', label: 'Progress' },
+    { icon: 'convert_to_pdf', label: 'File Converter' },
     { icon: 'settings', label: 'Advanced' },
   ];
 
@@ -142,11 +150,105 @@ function App() {
               </div>
             </Card>
 
-            <Card title="Special Buttons">
+            <Card title="Icon Buttons">
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <IconButton icon="favorite" variant="primary" size="sm" tooltip="Like" />
+                <IconButton icon="favorite" variant="primary" size="md" tooltip="Like" />
+                <IconButton icon="favorite" variant="primary" size="lg" tooltip="Like" />
+                <IconButton icon="settings" variant="secondary" size="md" tooltip="Settings" />
+                <IconButton icon="delete" variant="secondary" size="md" tooltip="Delete" />
+                <IconButton icon="search" variant="secondary" size="md" tooltip="Search" />
+              </div>
+            </Card>
+
+            <Card title="Split Buttons">
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <SplitButton
+                  primaryLabel="Save"
+                  primaryIcon="save"
+                  variant="primary"
+                  onPrimaryClick={() => console.log('Saved')}
+                  options={[
+                    { label: 'Save as...', icon: 'file_save_as', onClick: () => console.log('Save as') },
+                    { label: 'Save all', icon: 'save_all', onClick: () => console.log('Save all') },
+                    { label: 'Auto-save', icon: 'schedule', onClick: () => console.log('Auto-save') },
+                  ]}
+                />
+                <SplitButton
+                  primaryLabel="Export"
+                  primaryIcon="share"
+                  variant="secondary"
+                  onPrimaryClick={() => console.log('Export')}
+                  options={[
+                    { label: 'Export as PDF', icon: 'description', onClick: () => console.log('PDF') },
+                    { label: 'Export as CSV', icon: 'table_chart', onClick: () => console.log('CSV') },
+                    { label: 'Export as JSON', icon: 'code', onClick: () => console.log('JSON') },
+                  ]}
+                />
+              </div>
+            </Card>
+
+            <Card title="Special Buttons">
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
                 <HyperlinkButton href="#">Hyperlink</HyperlinkButton>
                 <RepeatButton onRepeat={() => setRepeatCount(c => c + 1)}>Repeat ({repeatCount})</RepeatButton>
                 <ToggleButton>Toggle Button</ToggleButton>
+              </div>
+            </Card>
+
+            <Card title="Toggle Button with Flyout">
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                <ToggleButtonFlyout
+                  label="Options"
+                  icon="settings"
+                  variant="primary"
+                  position="bottom"
+                  width="250px"
+                >
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)' }}>Settings</div>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                      <input type="checkbox" defaultChecked />
+                      <span style={{ fontSize: '0.9rem' }}>Enable notifications</span>
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                      <input type="checkbox" />
+                      <span style={{ fontSize: '0.9rem' }}>Dark mode</span>
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                      <input type="checkbox" defaultChecked />
+                      <span style={{ fontSize: '0.9rem' }}>Auto-save</span>
+                    </label>
+                  </div>
+                </ToggleButtonFlyout>
+
+                <ToggleButtonFlyout
+                  label="Filters"
+                  icon="filter_list"
+                  variant="secondary"
+                  position="bottom"
+                  width="280px"
+                >
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text)' }}>Category</div>
+                      <select style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text)', fontSize: '0.9rem' }}>
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                      </select>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text)' }}>Status</div>
+                      <select style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text)', fontSize: '0.9rem' }}>
+                        <option>All</option>
+                        <option>Pending</option>
+                        <option>Complete</option>
+                      </select>
+                    </div>
+                    <Button variant="primary" size="sm" style={{ width: '100%' }}>Apply Filters</Button>
+                  </div>
+                </ToggleButtonFlyout>
               </div>
             </Card>
 
@@ -315,15 +417,69 @@ function App() {
             <Card title="File Upload">
               <FileUpload accept=".pdf,.docx,.jpg" maxSize={5242880} />
             </Card>
-
             <Card title="Image Component">
               <Image src="https://via.placeholder.com/300x200" alt="Sample Image" />
             </Card>
           </div>
         )}
+
+        {currentView === 'File Converter' && (
+          <div>
+            <FileConverter
+              supportedFormats={['PDF', 'DOCX', 'XLSX', 'PNG', 'JPG', 'WEBP', 'MP4', 'MP3', 'ZIP', 'RAR']}
+              maxFileSize={104857600}
+            />
+          </div>
+        )}
       </SplitView>
 
       <FAB icon="add" label="Add" onClick={() => alert('FAB Clicked!')} position="bottom-right" />
+
+      <Footer
+        logoText="Vedic UI Kit"
+        sections={[
+          {
+            title: 'Product',
+            items: [
+              { label: 'Components', href: '#' },
+              { label: 'Documentation', href: '#' },
+              { label: 'Roadmap', href: '#' },
+            ],
+          },
+          {
+            title: 'Resources',
+            items: [
+              { label: 'Blog', href: '#' },
+              { label: 'Community', href: '#' },
+              { label: 'Support', onClick: () => console.log('Support clicked') },
+            ],
+          },
+          {
+            title: 'Legal',
+            items: [
+              { label: 'Privacy', href: '#' },
+              { label: 'Terms', href: '#' },
+              { label: 'License', href: '#' },
+            ],
+          },
+          {
+            title: 'Company',
+            items: [
+              { label: 'About', href: '#' },
+              { label: 'Careers', href: '#' },
+              { label: 'Contact', href: '#' },
+            ],
+          },
+        ]}
+        socialLinks={[
+          { label: 'GitHub', icon: 'code', href: 'https://github.com' },
+          { label: 'Twitter', icon: 'share', href: 'https://twitter.com' },
+          { label: 'LinkedIn', icon: 'business', href: 'https://linkedin.com' },
+          { label: 'Discord', icon: 'chat', href: '#' },
+        ]}
+        copyright="© 2026 Vedic UI Kit. All rights reserved."
+        layout="horizontal"
+      />
     </div>
   );
 }

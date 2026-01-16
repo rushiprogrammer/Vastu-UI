@@ -16,34 +16,41 @@ export const Button: React.FC<ButtonProps> = ({
   const [isActive, setIsActive] = useState(false);
 
   const sizeStyles = {
-    sm: { padding: '0.5rem 1rem', fontSize: '0.85rem' },
-    md: { padding: '0.75rem 1.5rem', fontSize: '0.95rem' },
-    lg: { padding: '1rem 2rem', fontSize: '1rem' },
+    sm: { padding: '8px 16px', fontSize: '0.875rem', minHeight: '36px' },
+    md: { padding: '10px 24px', fontSize: '0.9375rem', minHeight: '44px' },
+    lg: { padding: '12px 32px', fontSize: '1rem', minHeight: '48px' },
   };
 
   const baseStyles = {
     borderRadius: 'var(--radius-sm)',
     fontWeight: 600,
     cursor: 'pointer',
-    transition: 'all 0.3s cubic-bezier(0.33, 0, 0.67, 1)',
+    transition: 'all 0.2s var(--ease-smooth)',
     border: 'none',
     outline: 'none',
+    letterSpacing: '-0.2px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    whiteSpace: 'nowrap',
+    WebkitUserSelect: 'none',
     ...sizeStyles[size],
-  };
+  } as any;
 
   const getPrimaryStyles = () => ({
-    background: isActive ? '#e85d04' : isHovered ? '#fb8500' : 'var(--accent)',
+    background: 'var(--accent)',
     color: '#fff',
-    transform: isActive ? 'scale(0.98)' : isHovered ? 'translateY(-2px)' : 'scale(1)',
-    boxShadow: isHovered ? '0 8px 20px rgba(249, 115, 22, 0.3)' : '0 2px 8px rgba(0, 0, 0, 0.1)',
+    transform: isActive ? 'scale(0.98)' : isHovered ? 'translateY(-1px)' : 'scale(1)',
+    boxShadow: isActive ? '0 1px 3px rgba(249, 115, 22, 0.2)' : isHovered ? '0 4px 12px rgba(249, 115, 22, 0.3)' : '0 2px 6px rgba(249, 115, 22, 0.2)',
+    opacity: isActive ? 0.95 : isHovered ? 0.95 : 1,
   });
 
   const getSecondaryStyles = () => ({
-    background: isActive ? 'var(--accent)' : isHovered ? 'rgba(249, 115, 22, 0.1)' : 'transparent',
+    background: isActive ? 'var(--accent)' : isHovered ? 'rgba(249, 115, 22, 0.08)' : 'transparent',
     border: '2px solid var(--accent)',
     color: isActive ? '#fff' : 'var(--accent)',
-    transform: isActive ? 'scale(0.98)' : isHovered ? 'translateY(-2px)' : 'scale(1)',
-    boxShadow: isHovered ? '0 8px 20px rgba(249, 115, 22, 0.2)' : 'none',
+    transform: isActive ? 'scale(0.98)' : isHovered ? 'translateY(-1px)' : 'scale(1)',
+    boxShadow: isActive ? '0 1px 3px rgba(249, 115, 22, 0.1)' : isHovered ? '0 2px 8px rgba(249, 115, 22, 0.15)' : 'none',
   });
 
   const variantStyles = variant === 'primary' ? getPrimaryStyles() : getSecondaryStyles();

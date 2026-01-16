@@ -1,0 +1,197 @@
+/* File Converter Styles */
+
+.file-converter {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-md);
+}
+
+.converter-card {
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg);
+}
+
+.converter-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.section-title {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+}
+
+/* File Info */
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+.file-name {
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+  word-break: break-all;
+}
+
+.file-size {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Format Selection */
+.format-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-md);
+}
+
+.format-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.format-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.format-arrow {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+/* Buttons */
+.convert-button {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.download-button {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+.reset-button {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 14px;
+  border-radius: var(--radius-md);
+}
+
+/* Progress */
+.progress-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--space-xs);
+}
+
+/* Messages */
+.error-section {
+  padding: var(--space-md);
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.success-section {
+  padding: var(--space-md);
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: var(--radius-md);
+}
+
+.success-message {
+  color: #22c55e;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Dark theme */
+[data-theme='dark'] .error-section {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+[data-theme='dark'] .success-section {
+  background-color: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .file-converter {
+    padding: var(--space-sm);
+  }
+
+  .format-row {
+    flex-direction: column;
+  }
+
+  .format-arrow {
+    transform: rotate(90deg);
+    margin: 0;
+    text-align: center;
+  }
+
+  .button-group {
+    grid-template-columns: 1fr;
+  }
+
+  .file-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .file-size {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 640px) {
+  .converter-card {
+    border-radius: var(--radius-md);
+  }
+
+  .convert-button,
+  .download-button,
+  .reset-button {
+    font-size: 13px;
+    padding: var(--space-xs) var(--space-sm);
+  }
+}
