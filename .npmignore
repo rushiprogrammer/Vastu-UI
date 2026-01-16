@@ -1,0 +1,39 @@
+# Source files
+src/
+.github/
+public/
+
+# Config files
+vite.config.ts
+tsconfig*.json
+eslint.config.js
+index.html
+
+# Documentation
+*.md
+!README.md
+
+# Dev dependencies
+node_modules/
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.*.local

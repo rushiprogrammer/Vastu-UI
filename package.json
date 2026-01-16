@@ -3,6 +3,26 @@
   "description": "Vedic Design System - Complete React Components Library",
   "version": "0.1.0",
   "type": "module",
+  "author": "Rushi Programmer",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rushiprogrammer/Vastu-UI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rushiprogrammer/Vastu-UI/issues"
+  },
+  "homepage": "https://github.com/rushiprogrammer/Vastu-UI#readme",
+  "keywords": [
+    "react",
+    "components",
+    "ui-kit",
+    "design-system",
+    "vedic",
+    "typescript",
+    "css",
+    "library"
+  ],
   "main": "./dist/vedic-ui-kit.umd.js",
   "module": "./dist/vedic-ui-kit.es.js",
   "types": "./dist/index.d.ts",
@@ -15,7 +35,9 @@
     "./css": "./dist/ui-kit.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "vite",
