@@ -2,20 +2,14 @@ import { useState } from 'react';
 import {
   FileUpload,
   Button,
-  ComboBox,
   Card,
   ProgressBar,
   TextBlock,
 } from './index';
 import '../styles/file-converter.css';
 
-interface ComboBoxOption {
-  label: string;
-  value: string;
-}
-
-interface FileItem {
-  file: File;
+interface ConversionTask {
+  id: string;
   fromFormat: string;
   toFormat: string;
   isConverting?: boolean;
@@ -25,6 +19,15 @@ interface FileItem {
   successMessage?: string | null;
 }
 
+interface FileItem {
+  id: string;
+  file: File;
+  fromFormat: string;
+  conversionTasks: ConversionTask[];
+  totalProgress?: number;
+  hasConvertedFiles?: boolean;
+}
+
 export interface FileConverterProps {
   supportedFormats?: string[];
   onConvert?: (file: File, fromFormat: string, toFormat: string) => Promise<Blob>;
@@ -32,12 +35,12 @@ export interface FileConverterProps {
 }
 
 export function FileConverter({
-  supportedFormats = ['PDF', 'DOCX', 'XLSX', 'PNG', 'JPG', 'WEBP', 'MP4', 'MP3'],
+  supportedFormats = ['PDF', 'DOCX', 'XLSX', 'PNG', 'JPG', 'WEBP', 'MP4', 'MP3', 'GIF', 'SVG', 'HEIC', 'TIFF'],
   onConvert,
   maxFileSize = 5368709120, // 5GB default
 }: FileConverterProps) {
   const [uploadedFiles, setUploadedFiles] = useState<FileItem[]>([]);
-  const [toFormat, setToFormat] = useState('DOCX');
+  const [selectedFormats, setSelectedFormats] = useState<string[]>(['DOCX', 'PDF']);
   const [error, setError] = useState<string | null>(null);
 
   const handleFileUpload = (files: File[]) => {
@@ -52,9 +55,14 @@ export function FileConverter({
         return true;
       })
       .map((file) => ({
+        id: `${Date.now()}-${Math.random()}`,
         file,
         fromFormat: file.name.split('.').pop()?.toUpperCase() || 'PDF',
-        toFormat: toFormat,
+        conversionTasks: selectedFormats.map((fmt) => ({
+          id: `${Date.now()}-${Math.random()}`,
+          fromFormat: file.name.split('.').pop()?.toUpperCase() || 'PDF',
+          toFormat: fmt,
+        })),
       }));
 
     if (newFiles.length > 0) {
@@ -63,70 +71,83 @@ export function FileConverter({
     }
   };
 
-  const handleConvertFile = async (index: number) => {
-    const fileItem = uploadedFiles[index];
-    if (!fileItem) return;
+  const handleConvertTask = async (fileIndex: number, taskIndex: number) => {
+    const fileItem = uploadedFiles[fileIndex];
+    const task = fileItem.conversionTasks[taskIndex];
+    if (!fileItem || !task) return;
 
-    if (fileItem.fromFormat === fileItem.toFormat) {
+    if (task.fromFormat === task.toFormat) {
       const updated = [...uploadedFiles];
-      updated[index].error = 'Source and destination formats must be different';
+      updated[fileIndex].conversionTasks[taskIndex].error = 'Source and destination formats must be different';
       setUploadedFiles(updated);
       return;
     }
 
     const updated = [...uploadedFiles];
-    updated[index].isConverting = true;
-    updated[index].conversionProgress = 0;
-    updated[index].error = null;
-    updated[index].successMessage = null;
+    updated[fileIndex].conversionTasks[taskIndex].isConverting = true;
+    updated[fileIndex].conversionTasks[taskIndex].conversionProgress = 0;
+    updated[fileIndex].conversionTasks[taskIndex].error = null;
+    updated[fileIndex].conversionTasks[taskIndex].successMessage = null;
     setUploadedFiles(updated);
 
     try {
-      // Simulate conversion progress
       const progressInterval = setInterval(() => {
         setUploadedFiles((prev) => {
           const newState = [...prev];
-          if (newState[index].conversionProgress && newState[index].conversionProgress! >= 90) {
+          const currentProgress = newState[fileIndex].conversionTasks[taskIndex].conversionProgress || 0;
+          if (currentProgress >= 90) {
             clearInterval(progressInterval);
             return newState;
           }
-          newState[index].conversionProgress = (newState[index].conversionProgress || 0) + Math.random() * 30;
+          newState[fileIndex].conversionTasks[taskIndex].conversionProgress = currentProgress + Math.random() * 30;
           return newState;
         });
       }, 500);
 
-      // Call custom conversion handler if provided
       let result: Blob;
       if (onConvert) {
-        result = await onConvert(fileItem.file, fileItem.fromFormat, fileItem.toFormat);
+        result = await onConvert(fileItem.file, task.fromFormat, task.toFormat);
       } else {
-        // Mock conversion
         await new Promise((resolve) => setTimeout(resolve, 2000));
         result = fileItem.file;
       }
 
       const finalUpdate = [...uploadedFiles];
       clearInterval(progressInterval);
-      finalUpdate[index].conversionProgress = 100;
-      finalUpdate[index].convertedFile = result;
-      finalUpdate[index].successMessage = `Successfully converted to ${fileItem.toFormat}`;
-      finalUpdate[index].isConverting = false;
+      finalUpdate[fileIndex].conversionTasks[taskIndex].conversionProgress = 100;
+      finalUpdate[fileIndex].conversionTasks[taskIndex].convertedFile = result;
+      finalUpdate[fileIndex].conversionTasks[taskIndex].successMessage = `Converted to ${task.toFormat}`;
+      finalUpdate[fileIndex].conversionTasks[taskIndex].isConverting = false;
+      finalUpdate[fileIndex].hasConvertedFiles = true;
       setUploadedFiles(finalUpdate);
     } catch (err) {
       const errorUpdate = [...uploadedFiles];
-      errorUpdate[index].error = `Conversion failed: ${err instanceof Error ? err.message : 'Unknown error'}`;
-      errorUpdate[index].isConverting = false;
+      errorUpdate[fileIndex].conversionTasks[taskIndex].error = `Conversion failed: ${err instanceof Error ? err.message : 'Unknown error'}`;
+      errorUpdate[fileIndex].conversionTasks[taskIndex].isConverting = false;
       setUploadedFiles(errorUpdate);
     }
   };
 
-  const handleDownloadFile = (index: number) => {
-    const fileItem = uploadedFiles[index];
-    if (!fileItem.convertedFile || !fileItem.file) return;
+  const handleConvertAllTasks = async (fileIndex: number) => {
+    const fileItem = uploadedFiles[fileIndex];
+    if (!fileItem) return;
+
+    for (let i = 0; i < fileItem.conversionTasks.length; i++) {
+      const task = fileItem.conversionTasks[i];
+      if (!task.convertedFile && !task.isConverting) {
+        await handleConvertTask(fileIndex, i);
+      }
+    }
+  };
+
+  const handleDownloadTask = (fileIndex: number, taskIndex: number) => {
+    const fileItem = uploadedFiles[fileIndex];
+    const task = fileItem.conversionTasks[taskIndex];
+    if (!task.convertedFile || !fileItem.file) return;
 
     const originalName = fileItem.file.name.split('.')[0];
-    const newFileName = `${originalName}.${fileItem.toFormat.toLowerCase()}`;
-    const url = URL.createObjectURL(fileItem.convertedFile);
+    const newFileName = `${originalName}.${task.toFormat.toLowerCase()}`;
+    const url = URL.createObjectURL(task.convertedFile);
     const link = document.createElement('a');
     link.href = url;
     link.download = newFileName;
@@ -136,8 +157,8 @@ export function FileConverter({
     URL.revokeObjectURL(url);
   };
 
-  const handleRemoveFile = (index: number) => {
-    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveFile = (fileIndex: number) => {
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== fileIndex));
   };
 
   const handleRemoveAllFiles = () => {
@@ -145,46 +166,49 @@ export function FileConverter({
     setError(null);
   };
 
-  const formatOptions: ComboBoxOption[] = supportedFormats.map((fmt) => ({
-    label: fmt,
-    value: fmt,
-  }));
+  const handleToggleFormat = (format: string) => {
+    setSelectedFormats((prev) =>
+      prev.includes(format) ? prev.filter((f) => f !== format) : [...prev, format]
+    );
+  };
 
   return (
-    <div className="file-converter">
-      <Card title="File Converter">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {/* Upload Section */}
+    <div className="file-converter cloud-converter">
+      <Card title="Cloud File Converter">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          {/* Format Selection */}
           <div className="converter-section">
-            <TextBlock variant="subtitle">1. Select Files to Convert</TextBlock>
-            <FileUpload
-              multiple={true}
-              accept={supportedFormats.map((fmt) => `.${fmt.toLowerCase()}`).join(',')}
-              maxSize={maxFileSize}
-              onUpload={handleFileUpload}
-            />
+            <TextBlock variant="subtitle">Select Output Formats</TextBlock>
+            <p style={{ fontSize: '13px', color: 'var(--muted)', margin: '0 0 1rem 0' }}>
+              Choose which formats you want to convert your files to
+            </p>
+            <div className="format-grid">
+              {supportedFormats.map((fmt) => (
+                <label key={fmt} className="format-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedFormats.includes(fmt)}
+                    onChange={() => handleToggleFormat(fmt)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                  <span className="format-label-text">{fmt}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
-          {/* Global Destination Format Selection */}
-          {uploadedFiles.length > 0 && (
-            <div className="converter-section">
-              <TextBlock variant="subtitle">2. Select Destination Format</TextBlock>
-              <div className="format-group">
-                <label className="format-label">Convert All To:</label>
-                <ComboBox
-                  value={toFormat}
-                  onChange={(newFormat) => {
-                    setToFormat(newFormat);
-                    setUploadedFiles((prev) =>
-                      prev.map((item) => ({ ...item, toFormat: newFormat }))
-                    );
-                  }}
-                  options={formatOptions}
-                  placeholder="Select format"
-                />
-              </div>
+          {/* Upload Section */}
+          <div className="converter-section">
+            <TextBlock variant="subtitle">Upload Files</TextBlock>
+            <div className="upload-wrapper">
+              <FileUpload
+                multiple={true}
+                accept={supportedFormats.map((fmt) => `.${fmt.toLowerCase()}`).join(',')}
+                maxSize={maxFileSize}
+                onUpload={handleFileUpload}
+              />
             </div>
-          )}
+          </div>
 
           {/* Error Message */}
           {error && (
@@ -196,68 +220,105 @@ export function FileConverter({
           {/* Files List */}
           {uploadedFiles.length > 0 && (
             <div className="converter-section">
-              <TextBlock variant="subtitle">3. Files Ready to Convert</TextBlock>
-              <div className="files-list">
-                {uploadedFiles.map((fileItem, index) => (
-                  <div key={index} className="file-item">
-                    <div className="file-item-info">
-                      <div className="file-item-header">
-                        <span className="file-name">{fileItem.file.name}</span>
-                        <span className="file-size">({(fileItem.file.size / 1024 / 1024).toFixed(2)} MB)</span>
+              <div className="files-header">
+                <TextBlock variant="subtitle">{uploadedFiles.length} File(s) in Queue</TextBlock>
+                <Button
+                  variant="secondary"
+                  onClick={handleRemoveAllFiles}
+                  size="sm"
+                >
+                  Clear All
+                </Button>
+              </div>
+
+              <div className="files-list cloud-style">
+                {uploadedFiles.map((fileItem, fileIndex) => (
+                  <div key={fileItem.id} className="file-item cloud-file-item">
+                    <div className="file-item-main">
+                      <div className="file-item-info">
+                        <div className="file-info-icon">📄</div>
+                        <div className="file-info-text">
+                          <div className="file-item-name">{fileItem.file.name}</div>
+                          <div className="file-item-size">
+                            {(fileItem.file.size / 1024 / 1024).toFixed(2)} MB • {fileItem.fromFormat}
+                          </div>
+                        </div>
                       </div>
-                      <div className="file-item-formats">
-                        <span className="format-badge from">{fileItem.fromFormat}</span>
-                        <span className="format-arrow">→</span>
-                        <span className="format-badge to">{fileItem.toFormat}</span>
+
+                      <div className="conversion-tasks">
+                        {fileItem.conversionTasks.map((task, taskIndex) => (
+                          <div key={task.id} className="conversion-task">
+                            <div className="task-header">
+                              <span className="task-format">
+                                {fileItem.fromFormat} → {task.toFormat}
+                              </span>
+                              {task.successMessage && <span className="task-status success">✓</span>}
+                              {task.error && <span className="task-status error">✕</span>}
+                              {task.isConverting && <span className="task-status converting">⟳</span>}
+                            </div>
+
+                            {task.isConverting && (
+                              <div className="task-progress">
+                                <ProgressBar value={task.conversionProgress || 0} max={100} />
+                                <span className="progress-text">{Math.round(task.conversionProgress || 0)}%</span>
+                              </div>
+                            )}
+
+                            {task.error && (
+                              <div className="task-error-msg">{task.error}</div>
+                            )}
+
+                            {task.successMessage && (
+                              <div className="task-success-msg">{task.successMessage}</div>
+                            )}
+
+                            <div className="task-actions">
+                              {!task.convertedFile && !task.isConverting && (
+                                <Button
+                                  variant="primary"
+                                  onClick={() => handleConvertTask(fileIndex, taskIndex)}
+                                  size="sm"
+                                >
+                                  Convert
+                                </Button>
+                              )}
+
+                              {task.convertedFile && (
+                                <Button
+                                  variant="primary"
+                                  onClick={() => handleDownloadTask(fileIndex, taskIndex)}
+                                  size="sm"
+                                >
+                                  ↓ Download
+                                </Button>
+                              )}
+
+                              {task.isConverting && (
+                                <Button
+                                  variant="secondary"
+                                  disabled
+                                  size="sm"
+                                >
+                                  Converting...
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
 
-                    {fileItem.isConverting && (
-                      <div className="file-item-progress">
-                        <TextBlock variant="body">
-                          Converting: {Math.round(fileItem.conversionProgress || 0)}%
-                        </TextBlock>
-                        <ProgressBar value={fileItem.conversionProgress || 0} max={100} />
-                      </div>
-                    )}
-
-                    {fileItem.error && (
-                      <div className="file-item-error">
-                        <TextBlock variant="body">⚠️ {fileItem.error}</TextBlock>
-                      </div>
-                    )}
-
-                    {fileItem.successMessage && (
-                      <div className="file-item-success">
-                        <TextBlock variant="body">✓ {fileItem.successMessage}</TextBlock>
-                      </div>
-                    )}
-
                     <div className="file-item-actions">
-                      {!fileItem.convertedFile && !fileItem.isConverting && (
-                        <Button
-                          variant="primary"
-                          onClick={() => handleConvertFile(index)}
-                          size="sm"
-                        >
-                          Convert
-                        </Button>
-                      )}
-
-                      {fileItem.convertedFile && (
-                        <Button
-                          variant="primary"
-                          onClick={() => handleDownloadFile(index)}
-                          size="sm"
-                        >
-                          📥 Download
-                        </Button>
-                      )}
-
+                      <Button
+                        variant="primary"
+                        onClick={() => handleConvertAllTasks(fileIndex)}
+                        style={{ flex: 1 }}
+                      >
+                        Convert All ({fileItem.conversionTasks.length})
+                      </Button>
                       <Button
                         variant="secondary"
-                        onClick={() => handleRemoveFile(index)}
-                        size="sm"
+                        onClick={() => handleRemoveFile(fileIndex)}
                       >
                         Remove
                       </Button>
@@ -266,13 +327,12 @@ export function FileConverter({
                 ))}
               </div>
 
-              {uploadedFiles.length > 0 && (
+              {uploadedFiles.some((f) => f.hasConvertedFiles) && (
                 <Button
-                  variant="secondary"
-                  onClick={handleRemoveAllFiles}
-                  style={{ marginTop: '1rem', width: '100%' }}
+                  variant="primary"
+                  style={{ width: '100%', marginTop: '1rem' }}
                 >
-                  Clear All Files
+                  📦 Download All Converted Files
                 </Button>
               )}
             </div>
