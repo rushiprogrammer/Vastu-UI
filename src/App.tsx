@@ -77,14 +77,14 @@ function App() {
   const [radio, setRadio] = useState('opt1');
 
   const navItems = [
-    { icon: 'dashboard', label: 'Overview' },
+    { icon: 'home', label: 'Overview' },
     { icon: 'smart_button', label: 'Buttons' },
     { icon: 'calendar_month', label: 'Date & Time' },
     { icon: 'list', label: 'Lists' },
     { icon: 'dashboard_customize', label: 'Layout' },
     { icon: 'show_chart', label: 'Progress' },
-    { icon: 'convert_to_pdf', label: 'File Converter' },
-    { icon: 'settings', label: 'Advanced' },
+    { icon: 'file_upload', label: 'File Converter' },
+    { icon: 'tune', label: 'Advanced' },
   ];
 
   const commands = [
@@ -107,7 +107,14 @@ function App() {
         <ThemeToggle />
       </div>
 
-      <SplitView displayMode="compact" items={navItems} onNavigate={setCurrentView}>
+      <SplitView 
+        displayMode="compact" 
+        items={navItems} 
+        onNavigate={setCurrentView}
+        paneLength="260px"
+        iconSize="md"
+        showIcons={true}
+      >
         {currentView === 'overview' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <Card title="🕉️ Vedic UI Kit - 50+ Components">
