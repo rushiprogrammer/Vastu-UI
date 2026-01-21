@@ -23,7 +23,7 @@ export interface FileConverterProps {
 export function FileConverter({
   supportedFormats = ['PDF', 'DOCX', 'XLSX', 'PNG', 'JPG', 'WEBP', 'MP4', 'MP3'],
   onConvert,
-  maxFileSize = 104857600, // 100MB default
+  maxFileSize = 5368709120, // 5GB default
 }: FileConverterProps) {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [fromFormat, setFromFormat] = useState(uploadedFile?.name.split('.').pop()?.toUpperCase() || 'PDF');
@@ -45,7 +45,8 @@ export function FileConverter({
 
     // Validate file size
     if (file.size > maxFileSize) {
-      setError(`File size exceeds ${maxFileSize / 1048576}MB limit`);
+      const limitGB = (maxFileSize / 1073741824).toFixed(2);
+      setError(`File size exceeds ${limitGB}GB limit`);
       return;
     }
 

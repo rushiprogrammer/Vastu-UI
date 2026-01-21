@@ -434,7 +434,7 @@ function App() {
           <div>
             <FileConverter
               supportedFormats={['PDF', 'DOCX', 'XLSX', 'PNG', 'JPG', 'WEBP', 'MP4', 'MP3', 'ZIP', 'RAR']}
-              maxFileSize={104857600}
+              maxFileSize={5368709120}
             />
           </div>
         )}
