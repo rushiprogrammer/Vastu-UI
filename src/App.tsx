@@ -430,7 +430,7 @@ function App() {
           </div>
         )}
 
-        {currentView === 'File Converter' && (
+        {currentView === 'file converter' && (
           <div>
             <FileConverter
               supportedFormats={['PDF', 'DOCX', 'XLSX', 'PNG', 'JPG', 'WEBP', 'MP4', 'MP3', 'ZIP', 'RAR']}

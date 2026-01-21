@@ -136,7 +136,7 @@ export const SplitView: React.FC<SplitViewProps> = ({
               key={idx}
               onClick={() => {
                 setActiveItem(idx);
-                onNavigate?.(item.label.toLowerCase().replace(/\s+/g, '_'));
+                onNavigate?.(item.label.toLowerCase());
               }}
               style={getItemStyles(activeItem === idx)}
               title={item.label}
